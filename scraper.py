@@ -1,8 +1,23 @@
 # This is a template for a Python scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
-# import scraperwiki
-# import lxml.html
+import scraperwiki
+import lxml.html
+
+
+class Attendance:
+
+    rss_url = 'http://parlinfo.aph.gov.au/parlInfo/feeds/rss.w3p;adv=yes;orderBy=date-eFirst;page={page};query=Title%3Aattendance;resCount=Default'
+
+    def get_list_page(self, page_index):
+        html = scraperwiki.scrape(self.rss_url.format({'page': page_index}))
+        root = lxml.html.fromstring(html)
+        content = root.cssselect("div[id='documentContentPanel']")
+
+
+attendance = Attendance()
+attendance.get_list_page(0)
+
 #
 # # Read in a page
 # html = scraperwiki.scrape("http://foo.com")
