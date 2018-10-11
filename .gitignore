@@ -4,4 +4,6 @@ data.sqlite
 # JetBrains
 .idea/
 
-cache/
+cache/*
+!cache/data-2018-2015.sqlite
+!cache/pages-2018-2015.zip

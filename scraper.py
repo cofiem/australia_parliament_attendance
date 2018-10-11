@@ -36,8 +36,9 @@ class Attendance:
             self.create_sqlite_tables(db_conn)
             page_index = 0
             while True:
-                print('Processing page {} of links'.format(page_index + 1))
+                print('Processing links - page {}'.format(page_index + 1))
                 link_url = self.build_rss_url(page_index)
+                page_index += 1
 
                 link_page = self.download_html(link_url)
                 if link_page is None:
@@ -46,7 +47,6 @@ class Attendance:
                 item_urls = self.parse_rss_page(link_page)
 
                 for item_url in item_urls:
-                    print('Processing url {}'.format(item_url))
                     content_page = self.download_html(item_url)
                     content_item = self.parse_content_page(item_url, content_page)
 
@@ -58,6 +58,7 @@ class Attendance:
                         continue
 
                     db_data = self.build_rows(content_item, attendance_item)
+                    print('Processing {} - {}'.format(db_data['sitting_day']['title'], item_url))
 
                     sitting_day_id = self.sqlite_sitting_day_row(db_conn, db_data['sitting_day'])
 
@@ -142,8 +143,10 @@ class Attendance:
                     on_leave = name.startswith('*') or name.endswith('*')
                     name = name.strip('*')
                     people.append((self.normalise_string(name), on_leave))
+
             elif 'All Members attended (at some time during the sitting).' in line:
                 all_attended = True
+
             elif 'Present, all senators except ' in line:
                 names_raw = line.replace('Present, all senators except Senators ', '')
                 names_raw = names_raw.replace('Present, all senators except Senator ', '')
@@ -158,9 +161,12 @@ class Attendance:
 
                 for name in names:
                     name = name.strip()
-                    on_leave = name.startswith('*') or name.endswith('*')
+                    on_leave = name.startswith('*') or name.endswith('*') or '(on leave)' in line
                     name = name.strip('*')
                     people.append((self.normalise_string(name), on_leave))
+
+            elif 'Present, all senators.' in line:
+                all_attended = True
 
         # -> senate
 
