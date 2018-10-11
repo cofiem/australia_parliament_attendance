@@ -3,3 +3,5 @@ data.sqlite
 
 # JetBrains
 .idea/
+
+cache/
