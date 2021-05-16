@@ -52,6 +52,6 @@ class CacheFiles:
 
     def get_hash(self, value: str):
         value_bytes = value.encode("utf-8")
-        hash_func = hashlib.sha256(value_bytes, usedforsecurity=False)
+        hash_func = hashlib.sha256(value_bytes)
         result = hash_func.hexdigest()
         return result
