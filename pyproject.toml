@@ -9,6 +9,7 @@ python = ">= 3.6.2, < 4"
 lxml = "^4.6.3"
 requests = "^2.25.1"
 cssselect = "^1.1.0"
+dataclasses = { version = "^0.8", python = ">=3.6, <3.7" }
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
